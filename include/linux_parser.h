@@ -1,5 +1,5 @@
-#ifndef SYSTEM_PARSER_H
-#define SYSTEM_PARSER_H
+#ifndef LINUX_PARSER_H
+#define LINUX_PARSER_H
 
 #include <fstream>
 #include <regex>
@@ -20,7 +20,7 @@ const std::string kPasswordPath{"/etc/passwd"};
 
 // System
 float MemoryUtilization();
-long UpTime();
+double UpTime();
 std::vector<int> Pids();
 int TotalProcesses();
 int RunningProcesses();
