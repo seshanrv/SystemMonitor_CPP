@@ -10,6 +10,7 @@
 using std::string;
 using std::to_string;
 using std::vector;
+using LinuxParser::ProcessCPUStates;
 
 // TODO: Return this process's ID
 int Process::Pid() { return pid; }
@@ -17,7 +18,17 @@ int Process::Pid() { return pid; }
 // TODO: Return this process's CPU utilization
 float Process::CpuUtilization() { 
     vector<long> process_times = LinuxParser::ProcessTimes(pid);
-    return 0; }
+    long total_time = process_times[ProcessCPUStates::kUtime_] +
+                        process_times[ProcessCPUStates::kStime_] + 
+                        process_times[ProcessCPUStates::kCstime_] +
+                        process_times[ProcessCPUStates::kCutime_];
+    
+    long seconds = UpTime() - process_times[ProcessCPUStates::kStarttime_];
+
+    cpu_util = total_time/seconds;
+
+    return cpu_util; 
+}
 
 // TODO: Return the command that generated this process
 string Process::Command() { return LinuxParser::Command(pid); }
@@ -33,4 +44,7 @@ long int Process::UpTime() { return LinuxParser::UpTime(pid); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a[[maybe_unused]]) const { return true; }
+bool Process::operator<(Process const& a) const { 
+    // return this->CpuUtilization() < a.CpuUtilization() ? true : false; 
+    return this->cpu_util < a.cpu_util ? true : false;
+}

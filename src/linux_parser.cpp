@@ -236,7 +236,8 @@ string LinuxParser::Uid(int pid) {
   string line;
   string key;
   string value;
-  std::ifstream filestream(kPasswordPath);
+  std::ifstream filestream(kProcDirectory + std::to_string(pid) +
+                            kStatusFilename);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
@@ -255,8 +256,7 @@ string LinuxParser::User(int pid) {
   string uid = Uid(pid);
   string line;
   string username, x, user_id;
-  std::ifstream filestream( kProcDirectory + std::to_string(pid) +
-                            kStatusFilename);
+  std::ifstream filestream(kPasswordPath);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
