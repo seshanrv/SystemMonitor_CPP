@@ -10,6 +10,7 @@ using std::vector;
 using LinuxParser::CPUStates;
 
 // TODO: Check formulae
+// TODO: there is a pause in the display funciton, save prev values as class member? 
 float Processor::Utilization() {
 
   vector<long> cpu_util_prev = LinuxParser::CpuUtilization();

@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include <unistd.h>
+#include <iostream>
+#include <iomanip>
 
 #include "linux_parser.h"
 #include "format.h"
@@ -60,8 +62,7 @@ vector<int> LinuxParser::Pids() {
       // Is every character of the name a digit?
       string filename(file->d_name);
       if (std::all_of(filename.begin(), filename.end(), isdigit)) {
-        int pid = stoi(filename);
-        pids.push_back(pid);
+        pids.emplace_back(stoi(filename));
       }
     }
   }
@@ -100,7 +101,7 @@ long int LinuxParser::UpTime() {
     line_stream >> sys_uptime;
   }
   return sys_uptime; 
-  }
+}
 
 // TODO: Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() { return 0; }
@@ -222,7 +223,9 @@ string LinuxParser::Ram(int pid) {
       std::istringstream linestream(line);
       linestream >> key >> value;
       if (key == "VmSize:") {
-        value = std::to_string((stof(value) / 1000.0));
+        std::ostringstream val_stream;
+        val_stream << std::fixed << std::setprecision(1) << stof(value)/1000;
+        value = val_stream.str();
         break;
       }
     }
@@ -252,6 +255,7 @@ string LinuxParser::Uid(int pid) {
 
 // TODO: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
+//redis:x0.00:127::205.528000:0:41/bin/./goproxy 
 string LinuxParser::User(int pid) { 
   string uid = Uid(pid);
   string line;
@@ -259,11 +263,12 @@ string LinuxParser::User(int pid) {
   std::ifstream filestream(kPasswordPath);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
-      std::istringstream linestream(line);
       std::replace(line.begin(), line.end(), ':', ' ');
+      std::istringstream linestream(line);
       linestream >> username >> x >> user_id;
       if (uid == user_id){
         break;
+        std::cout<<line<<std::endl;
       }
     }
   }                             
