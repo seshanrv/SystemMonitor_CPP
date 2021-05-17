@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <unistd.h>
-#include <iostream>
+// #include <iostream>
 #include <iomanip>
 
 #include "linux_parser.h"
@@ -127,8 +127,10 @@ vector<long> LinuxParser::ProcessTimes(int pid) {
     while (linestream >> word) {
       if (n == fields[idx]) {
         process_times.push_back(stol(word) / clk_tck); 
+        if (idx == fields.size()-1){
+           break;
+        }
         idx++;
-        if (idx == fields.size()-1) break;
       }
       n++;
     }
@@ -179,6 +181,7 @@ int LinuxParser::TotalProcesses() {
     }
   }
   return total_proc; 
+
 }
 
 // TODO: Read and return the number of running processes
@@ -255,7 +258,6 @@ string LinuxParser::Uid(int pid) {
 
 // TODO: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-//redis:x0.00:127::205.528000:0:41/bin/./goproxy 
 string LinuxParser::User(int pid) { 
   string uid = Uid(pid);
   string line;
@@ -268,7 +270,6 @@ string LinuxParser::User(int pid) {
       linestream >> username >> x >> user_id;
       if (uid == user_id){
         break;
-        std::cout<<line<<std::endl;
       }
     }
   }                             
@@ -280,6 +281,7 @@ return username;
 long LinuxParser::UpTime(int pid) {
   string line;
   string word;
+  
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
                            kStatFilename);
   if (filestream.is_open()) {
@@ -293,5 +295,5 @@ long LinuxParser::UpTime(int pid) {
       n++;
     }
   }
-  return std::stol(word) / sysconf(_SC_CLK_TCK);
+  return UpTime() - std::stol(word)/sysconf(_SC_CLK_TCK);
 }

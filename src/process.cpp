@@ -22,12 +22,10 @@ float Process::CpuUtilization() {
                         process_times[ProcessCPUStates::kStime_] + 
                         process_times[ProcessCPUStates::kCstime_] +
                         process_times[ProcessCPUStates::kCutime_];
-    
-    long seconds = UpTime() - process_times[ProcessCPUStates::kStarttime_];
 
-    cpu_util = total_time/seconds;
+    return total_time/UpTime();
 
-    return cpu_util; 
+    // return cpu_util; 
 }
 
 // TODO: Return the command that generated this process
