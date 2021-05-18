@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Prerequisites
 *.d
 
@@ -30,3 +31,12 @@
 *.exe
 *.out
 *.app
+=======
+monitor
+a.out
+settings.json
+*.o
+build/*
+*.json
+.github/**
+>>>>>>> development
