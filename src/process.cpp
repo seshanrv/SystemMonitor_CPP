@@ -3,6 +3,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
+#include <thread>
 
 #include "process.h"
 #include "linux_parser.h"
@@ -18,14 +20,15 @@ int Process::Pid() { return pid; }
 // TODO: Return this process's CPU utilization
 float Process::CpuUtilization() { 
     vector<long> process_times = LinuxParser::ProcessTimes(pid);
-    long total_time = process_times[ProcessCPUStates::kUtime_] +
+
+    float total_time = static_cast<float> (process_times[ProcessCPUStates::kUtime_] +
                         process_times[ProcessCPUStates::kStime_] + 
                         process_times[ProcessCPUStates::kCstime_] +
-                        process_times[ProcessCPUStates::kCutime_];
+                        process_times[ProcessCPUStates::kCutime_]);
 
-    return total_time/UpTime();
+    cpu_util = total_time / static_cast<float> (UpTime());
 
-    // return cpu_util; 
+    return cpu_util; 
 }
 
 // TODO: Return the command that generated this process
@@ -43,6 +46,6 @@ long int Process::UpTime() { return LinuxParser::UpTime(pid); }
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process const& a) const { 
-    // return this->CpuUtilization() < a.CpuUtilization() ? true : false; 
-    return this->cpu_util < a.cpu_util ? true : false;
+    return this->cpu_util > a.cpu_util;
+    // return CpuUtilization() < a.CpuUtilization();
 }

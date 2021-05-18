@@ -27,8 +27,8 @@ float Processor::Utilization() {
   long Total = Idle + NonIdle;
 
   //   differentiate:  actual value minus the previous one
-  long totald = Total - PrevTotal;
-  long idled = Idle - PrevIdle;
+  float totald = static_cast<float> (Total - PrevTotal);
+  float idled = static_cast<float> (Idle - PrevIdle);
 
   float CPU_Percentage = (totald - idled) / totald;
   // float CPU_Percentage = NonIdle / Total;
