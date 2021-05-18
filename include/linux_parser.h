@@ -41,20 +41,10 @@ enum CPUStates {
   kGuestNice_
 };
 
-enum ProcessCPUStates{
-  kUtime_ = 0,
-  kStime_,
-  kCutime_,
-  kCstime_,
-  kStarttime_
-};
+enum ProcessCPUStates { kUtime_ = 0, kStime_, kCutime_, kCstime_, kStarttime_ };
 
 std::vector<long> CpuUtilization();
-long Jiffies();
-long ActiveJiffies();
-//long ActiveJiffies(int pid);
 std::vector<long> ProcessTimes(int pid);
-long IdleJiffies();
 
 // Processes
 std::string Command(int pid);

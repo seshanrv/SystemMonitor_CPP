@@ -11,8 +11,8 @@ class Processor {
 
   // TODO: Declare any necessary private members
  private:
-    long cpuIdle(vector<long> cpu_util);
-    long cpuNonIdle(vector<long> cpu_util);
+  long cpuIdle(vector<long> cpu_util);
+  long cpuNonIdle(vector<long> cpu_util);
 };
 
 #endif

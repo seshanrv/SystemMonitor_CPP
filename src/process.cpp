@@ -1,13 +1,13 @@
 #include <unistd.h>
 #include <cctype>
+#include <chrono>
 #include <sstream>
 #include <string>
-#include <vector>
-#include <chrono>
 #include <thread>
+#include <vector>
 
-#include "process.h"
 #include "linux_parser.h"
+#include "process.h"
 
 using std::string;
 using std::to_string;
@@ -18,17 +18,18 @@ using LinuxParser::ProcessCPUStates;
 int Process::Pid() { return pid; }
 
 // TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { 
-    vector<long> process_times = LinuxParser::ProcessTimes(pid);
+float Process::CpuUtilization() {
+  vector<long> process_times = LinuxParser::ProcessTimes(pid);
 
-    float total_time = static_cast<float> (process_times[ProcessCPUStates::kUtime_] +
-                        process_times[ProcessCPUStates::kStime_] + 
-                        process_times[ProcessCPUStates::kCstime_] +
-                        process_times[ProcessCPUStates::kCutime_]);
+  float total_time =
+      static_cast<float>(process_times[ProcessCPUStates::kUtime_] +
+                         process_times[ProcessCPUStates::kStime_] +
+                         process_times[ProcessCPUStates::kCstime_] +
+                         process_times[ProcessCPUStates::kCutime_]);
 
-    cpu_util = total_time / static_cast<float> (UpTime());
+  cpu_util = total_time / static_cast<float>(UpTime());
 
-    return cpu_util; 
+  return cpu_util;
 }
 
 // TODO: Return the command that generated this process
@@ -45,7 +46,6 @@ long int Process::UpTime() { return LinuxParser::UpTime(pid); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a) const { 
-    return this->cpu_util > a.cpu_util;
-    // return CpuUtilization() < a.CpuUtilization();
+bool Process::operator<(Process const& a) const {
+  return this->cpu_util > a.cpu_util;
 }
